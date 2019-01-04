@@ -18,7 +18,7 @@ loadingScene.preload = function() {
 		//let hiUnicorn = this.add.sprite(this.sys.game.config.width + 100, this.sys.game.config.height + 100, 'hiUnicorn').setScale(0.5).setInteractive();
 
 
-		//NOT WORKING TO DO ???? 
+		//NOT WORKING TO DO ???? Want to animate unicorn
 		/*
 		//pet movement (tween)
 	  let unicornTween = this.tweens.add({
@@ -39,6 +39,7 @@ loadingScene.preload = function() {
   	this.load.image('yayResult', 'assets/memewars/yayResult.png');
   	this.load.image('sadResult', 'assets/memewars/sadResult.png');
   	this.load.image('leaderboard', 'assets/memewars/TopScores.png');
+    this.load.image('leaderboardBtn', 'assets/memewars/leaderboardBtn.png');
 
   	
   	//Memes Spritesheet TO DO figure out better way of doing this
@@ -50,43 +51,12 @@ loadingScene.preload = function() {
         spacing: 1
     });
 
-
-  
-  // TO DO REMOVE OLD ASSETS load assets
-  this.load.image('backyard', 'assets/images/backyard.png');
-  this.load.image('apple', 'assets/images/apple.png');
-  this.load.image('candy', 'assets/images/candy.png');
-  this.load.image('rotate', 'assets/images/rotate.png');
-  this.load.image('toy', 'assets/images/rubber_duck.png');
-    
-    //load spritesheet
-    this.load.spritesheet('pet', 'assets/images/pet.png', {
-        frameWidth: 97,
-        frameHeight: 83,
-        margin: 1,
-        spacing: 1
-    });
-
-/*
-    //FOR TESTING ONLY
-    for(let i = 0; i < 100; i++){
-    	this.load.image('test' + i, 'assets/images/candy.png');
-    }
-    */
 };
 
 loadingScene.create = function() {
 
-	//Animations can be GLOBAL put them in loading create function and then accessble
-	//all across game in any scene
-	//animation
-    this.anims.create({
-      key: 'funnyfaces',
-      frames: this.anims.generateFrameNames('pet', {frames: [1, 2, 3]}),
-        frameRate: 7,
-        yoyo: true,
-        repeate: 0 //to repeat forever: -1
-    });
+
+
 
     this.scene.start('Game');
 /*

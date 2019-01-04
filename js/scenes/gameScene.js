@@ -5,18 +5,18 @@ let gameScene = new Phaser.Scene('Game');
 gameScene.init = function() {
     //game stats
     this.stats = {
-        coins: 500,
+        coins: 1000,
         time: 60
     };
 
     //decay parameters
 
     this.decayRates = {
-      time: -1
+      time: -60
     };
 
     //input how many memes are in the spritesheet here
-    this.numofMemes = 10;
+    this.numofMemes = 27;
 
     //array that will store the randomized order memes will be presented to player in
     this.memeOrder = [];
@@ -31,6 +31,8 @@ gameScene.init = function() {
     //variable to increment and move along the memeOrder
     this.memeCount = 0;
 
+    console.log(this.memeOrder);
+
     //MANUAL ENTRY array containing the vote record
     //match memeOrder[this.memeCount] to memeStats.memeNumber to get vote record for each
     this.memeStats = [
@@ -43,15 +45,36 @@ gameScene.init = function() {
       { memeNumber: 6, votes: -6 },
       { memeNumber: 7, votes: -7 },
       { memeNumber: 8, votes: -8 },
-      { memeNumber: 9, votes: -9 }
+      { memeNumber: 9, votes: -9 },
+      { memeNumber: 10, votes: -9 },
+      { memeNumber: 11, votes: -9 },
+      { memeNumber: 12, votes: -9 },
+      { memeNumber: 13, votes: -9 },
+      { memeNumber: 14, votes: -9 },
+      { memeNumber: 15, votes: -9 },
+      { memeNumber: 16, votes: -9 },
+      { memeNumber: 17, votes: -9 },
+      { memeNumber: 18, votes: -9 },
+      { memeNumber: 19, votes: -9 },
+      { memeNumber: 20, votes: -9 },
+      { memeNumber: 21, votes: -9 },
+      { memeNumber: 22, votes: -9 },
+      { memeNumber: 23, votes: -9 },
+      { memeNumber: 24, votes: -9 },
+      { memeNumber: 25, votes: -9 },
+      { memeNumber: 26, votes: -9 },
+      { memeNumber: 27, votes: -9 }
     ];
 
     //STATIC LEADERBOARD
     this.leaderboard = [
-    { name: ATM, coins: 900 },
-    { name: APC, coins: 2200 },
-    { name: YZY, coins: 700 }
+    { name: 'ATM', coins: 900 },
+    { name: 'APC', coins: 2200 },
+    { name: 'YZY', coins: 700 }
     ];
+
+    //variable to check if game is over
+    this.isGameOver = false;
     
 };
 
@@ -383,11 +406,11 @@ gameScene.refreshHud = function(){
 //stat updater
 gameScene.updateStats = function(statDiff){
 
+  //dont keep updating if gameover
+  if(this.isGameOver) return;
+
   //setting the currentMemeVotes stats
   this.currentMemeVotes = this.memeStats[this.memeOrder[this.memeCount]].votes;
-
-  //flag see if game over
-  let isGameOver = false;
 
 //cycling through the stats, updating them and checking if either is zero
 //if coins or time is at zero then gameOver
@@ -396,7 +419,7 @@ gameScene.updateStats = function(statDiff){
             this.stats[stat] += statDiff[stat];
 
             if(this.stats[stat] <= 0) {
-              isGameOver = true;
+              this.isGameOver = true;
               this.stats[stat] = 0;
 
             }
@@ -408,7 +431,7 @@ gameScene.updateStats = function(statDiff){
   this.refreshHud();
 
   //check if gameover
-  if(isGameOver) this.gameOver();
+  if(this.isGameOver) this.gameOver();
 
 
 
@@ -419,21 +442,127 @@ gameScene.gameOver = function() {
   
   //block ui
   this.uiBlocked = true;
-
-  //clear screen
   this.toggleHudVisibility();
+
   this.timeText.visible = false;
   this.meme.destroy();
 
   //LEADERBOARD
 
-    
-    let leaderboard = this.add.sprite(0,0,'leaderboard').setInteractive();
-    leaderboard.setOrigin(0,0);
+    this.createLeaderboard();
 
-    leaderboard.on('pointerdown', function(){
-      this.scene.start('Game');
-    }, this);
+};
+
+gameScene.createLeaderboard = function() {
+
+  /*
+  
+  this.leaderboardText = this.add.text(this.sys.game.config.width/2), this.sys.game.config.height - 50, 'Name     Coins', {
+    font: '24px Karla',
+    fill: '#ffffff'
+  };
+
+  this.leaderboardText.setText('Coins: ' + this.stats.coins);
+
+  */
+
+  this.leaderboardText;
+
+  this.leaderboard.push({
+    name: '*YOU*',
+    coins: this.stats.coins
+  });
+
+  //NOT WORKING supposed to display text from array in grid format
+  //var text2 = game.add.text(32, 120, '');
+  //text2.parseList(this.leaderboard);
+  //Brute forcing it here
+  //Display leaderboard
+
+  console.log("original leaderboard: ");
+  console.log(this.leaderboard);
+  let leaderboardForDisplay = sortObjectArray(this.leaderboard);  
+  console.log(leaderboardForDisplay);
+
+
+  //RANKING
+  this.leaderboardHeader = this.add.text(50, 100, "RANK", {
+      font: '24px Karla',
+      fill: '#ffffff',
+      underline: true
+    });
+
+  for(i=0; i < leaderboardForDisplay.length; i++){
+    this.leaderboardText = this.add.text(50, 150 + (i * 50), (i + 1) + '.', {
+      font: '24px Karla',
+      fill: '#ffffff'
+    });
+  }
+
+  
+
+  //NAME
+  this.leaderboardHeader = this.add.text(150, 100, "NAME", {
+      font: '24px Karla',
+      fill: '#ffffff',
+      underline: true
+    });
+
+  for(i=0; i < leaderboardForDisplay.length; i++){
+    this.leaderboardText = this.add.text(150, 150 + (i * 50), leaderboardForDisplay[i].name, {
+      font: '24px Karla',
+      fill: '#ffffff'
+    });
+  }
+
+    //COINS
+  this.leaderboardHeader = this.add.text(250, 100, "COINS", {
+      font: '24px Karla',
+      fill: '#ffffff',
+      underline: true
+    });
+
+  for(i=0; i < leaderboardForDisplay.length; i++){
+    this.leaderboardText = this.add.text(250, 150 + (i * 50), leaderboardForDisplay[i].coins, {
+      font: '24px Karla',
+      fill: '#ffffff'
+    });
+  }
+
+
+  let leaderboardBtn = this.add.sprite(this.sys.game.config.width/2, 500,'leaderboardBtn').setInteractive();
+
+  leaderboardBtn.on('pointerdown', function(){
+    this.scene.start('Game');
+  }, this);
+
+
+
+
+};
+
+
+//function to sort object array 
+//for sorting scores before creating leaderboard
+var sortObjectArray = function (array) {
+  
+  let sortedLeaderboard = [];
+
+  sortedLeaderboard.push(array[0]);
+
+  console.log("first item in sortedLeaderboard: ")
+  console.log(sortedLeaderboard);
+
+  //console.log(this.leaderboard.length);
+  for(i=1; i < array.length; i++){
+    if(sortedLeaderboard[0].coins <= array[i].coins){
+      sortedLeaderboard.unshift(array[i]);
+    } else {
+      sortedLeaderboard.push(array[i]);
+    }
+  }
+
+    return sortedLeaderboard ;
 
 };
 
@@ -463,3 +592,5 @@ var shuffle = function (array) {
   return array;
 
 };
+
+
