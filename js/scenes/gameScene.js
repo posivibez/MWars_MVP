@@ -15,11 +15,43 @@ gameScene.init = function() {
       time: -1
     };
 
-    //variable to track which meme 
+    //input how many memes are in the spritesheet here
+    this.numofMemes = 10;
+
+    //array that will store the randomized order memes will be presented to player in
+    this.memeOrder = [];
+
+    for (i = 0; i < this.numofMemes; i++){
+      this.memeOrder.push(i);
+    }
+
+    //randomize the order of the memes;
+    shuffle(this.memeOrder);
+
+    //variable to increment and move along the memeOrder
     this.memeCount = 0;
 
-    //array containing the vote record
-    this.memeStats = [-1, -1, -1, -1, -1, -2, -2, -3, -3, -3, -3, -3];
+    //MANUAL ENTRY array containing the vote record
+    //match memeOrder[this.memeCount] to memeStats.memeNumber to get vote record for each
+    this.memeStats = [
+      { memeNumber: 0, votes: 0 },
+      { memeNumber: 1, votes: -1 },
+      { memeNumber: 2, votes: -2 },
+      { memeNumber: 3, votes: -3 },
+      { memeNumber: 4, votes: -4 },
+      { memeNumber: 5, votes: -5 },
+      { memeNumber: 6, votes: -6 },
+      { memeNumber: 7, votes: -7 },
+      { memeNumber: 8, votes: -8 },
+      { memeNumber: 9, votes: -9 }
+    ];
+
+    //STATIC LEADERBOARD
+    this.leaderboard = [
+    { name: ATM, coins: 900 },
+    { name: APC, coins: 2200 },
+    { name: YZY, coins: 700 }
+    ];
     
 };
 
@@ -32,6 +64,7 @@ gameScene.create = function() {
     //event listener for bg
     
     this.meme = this.add.sprite(this.sys.game.config.width/2, (this.sys.game.config.height/2) - 50, 'memes', 0).setInteractive();
+    this.meme.setFrame(this.memeOrder[this.memeCount]);
 
     //TO DO ADD SWIPE EFFECT HERE
     //when meme clicked changeMeme
@@ -188,19 +221,21 @@ gameScene.changeMeme = function(pointer, localX, localY) {
 //display the result of the players vote to them
 gameScene.showResult = function(){
 
+  console.log("current vote: " + this.currentMemeVotes);
+  console.log(this.selectedBtn.texture.key);
+
   //new variable to check if voted successful (1) or not (0);
   let result;
 
-
-  if(this.selectedBtn.texture.key == 'downVote' && this.memeStats[this.memeCount] < 0){
+  if(this.selectedBtn.texture.key == 'downVote' && this.currentMemeVotes < 0){
     result = 1;
-  } else if(this.selectedBtn.texture.key == 'downVote' && this.memeStats[this.memeCount] >= 0){
-    result = 0;
-  } else if(this.selectedBtn.texture.key == 'upVote' && this.memeStats[this.memeCount] < 0){
-    result = 0;
-  } else if(this.selectedBtn.texture.key == 'downVote' && this.memeStats[this.memeCount] >= 0){
+  } else if(this.selectedBtn.texture.key == 'upVote' && this.currentMemeVotes >= 0){
     result = 1;
+  } else {
+    result = 0;
   }
+
+  console.log("Result: " + result);
 
   if(result == 1){
 
@@ -232,8 +267,6 @@ gameScene.showResult = function(){
                 this.yayResult.destroy();
                 
                 this.toggleHudVisibility();
-
-                console.log(this.selectedBtn.customStats);
                 //update stats
                 this.updateStats(this.selectedBtn.customStats);
                 this.uiReady();
@@ -276,8 +309,6 @@ gameScene.showResult = function(){
                 this.sadResult.destroy();
                 
                 this.toggleHudVisibility();
-
-                console.log(this.selectedBtn.customStats);
                 //update stats
                 this.updateStats(this.selectedBtn.customStats);
                 this.uiReady();
@@ -309,11 +340,10 @@ gameScene.nextMeme = function(){
   
   this.memeCount++;
 
-
   //TO DO add that h/w of game itself
   //TO DO why is last frame not loading in spritesheet??
   //set to new meme
-  this.meme.setFrame(this.memeCount);
+  this.meme.setFrame(this.memeOrder[this.memeCount]);
   this.meme.setPosition(207,318);
 
   //clear UI
@@ -353,9 +383,11 @@ gameScene.refreshHud = function(){
 //stat updater
 gameScene.updateStats = function(statDiff){
 
+  //setting the currentMemeVotes stats
+  this.currentMemeVotes = this.memeStats[this.memeOrder[this.memeCount]].votes;
+
   //flag see if game over
   let isGameOver = false;
-  console.log(statDiff);
 
 //cycling through the stats, updating them and checking if either is zero
 //if coins or time is at zero then gameOver
@@ -395,11 +427,39 @@ gameScene.gameOver = function() {
 
   //LEADERBOARD
 
+    
     let leaderboard = this.add.sprite(0,0,'leaderboard').setInteractive();
     leaderboard.setOrigin(0,0);
 
     leaderboard.on('pointerdown', function(){
       this.scene.start('Game');
     }, this);
+
+};
+
+/**
+ * Randomly shuffle an array
+ * https://stackoverflow.com/a/2450976/1293256
+ * @param  {Array} array The array to shuffle
+ * @return {String}      The first item in the shuffled array
+ */
+var shuffle = function (array) {
+
+  var currentIndex = array.length;
+  var temporaryValue, randomIndex;
+
+  // While there remain elements to shuffle...
+  while (0 !== currentIndex) {
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+
+    // And swap it with the current element.
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
+
+  return array;
 
 };
