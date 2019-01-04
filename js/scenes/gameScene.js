@@ -5,7 +5,7 @@ let gameScene = new Phaser.Scene('Game');
 gameScene.init = function() {
     //game stats
     this.stats = {
-        coins: 1000,
+        coins: 3000,
         time: 60
     };
 
