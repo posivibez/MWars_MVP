@@ -136,17 +136,11 @@ gameScene.createUi = function() {
     //DOWNVOTE
     this.downVote = this.add.sprite((this.sys.game.config.width/2) - 50, 600, 'downVote').setInteractive();
     
-    //DELETE IF WORKING
-    //this.downVote.customStats = {coins: 100};
-    
     this.downVote.on('pointerdown', this.pickBtn);
 
     
     //UPVOTE
     this.upVote = this.add.sprite((this.sys.game.config.width/2) + 50, 600, 'upVote').setInteractive();
-    
-    //DELETE IF WORKING
-    //this.upVote.customStats = {coins: -100};
     
     this.upVote.on('pointerdown', this.pickBtn);
 
