@@ -5,14 +5,14 @@ let gameScene = new Phaser.Scene('Game');
 gameScene.init = function() {
     //game stats
     this.stats = {
-        coins: 3000,
+        coins: 500,
         time: 60
     };
 
     //decay parameters
 
     this.decayRates = {
-      time: -60
+      time: -1
     };
 
     //input how many memes are in the spritesheet here
@@ -37,39 +37,39 @@ gameScene.init = function() {
     //match memeOrder[this.memeCount] to memeStats.memeNumber to get vote record for each
     this.memeStats = [
       { memeNumber: 0, votes: 0 },
-      { memeNumber: 1, votes: -1 },
+      { memeNumber: 1, votes: 1 },
       { memeNumber: 2, votes: -2 },
-      { memeNumber: 3, votes: -3 },
-      { memeNumber: 4, votes: -4 },
+      { memeNumber: 3, votes: 3 },
+      { memeNumber: 4, votes: 4 },
       { memeNumber: 5, votes: -5 },
-      { memeNumber: 6, votes: -6 },
-      { memeNumber: 7, votes: -7 },
-      { memeNumber: 8, votes: -8 },
+      { memeNumber: 6, votes: 6 },
+      { memeNumber: 7, votes: 7 },
+      { memeNumber: 8, votes: 8 },
       { memeNumber: 9, votes: -9 },
-      { memeNumber: 10, votes: -9 },
-      { memeNumber: 11, votes: -9 },
-      { memeNumber: 12, votes: -9 },
-      { memeNumber: 13, votes: -9 },
-      { memeNumber: 14, votes: -9 },
-      { memeNumber: 15, votes: -9 },
-      { memeNumber: 16, votes: -9 },
-      { memeNumber: 17, votes: -9 },
-      { memeNumber: 18, votes: -9 },
-      { memeNumber: 19, votes: -9 },
-      { memeNumber: 20, votes: -9 },
-      { memeNumber: 21, votes: -9 },
-      { memeNumber: 22, votes: -9 },
-      { memeNumber: 23, votes: -9 },
-      { memeNumber: 24, votes: -9 },
-      { memeNumber: 25, votes: -9 },
-      { memeNumber: 26, votes: -9 },
-      { memeNumber: 27, votes: -9 }
+      { memeNumber: 10, votes: 10 },
+      { memeNumber: 11, votes: -11 },
+      { memeNumber: 12, votes: -12 },
+      { memeNumber: 13, votes: 13 },
+      { memeNumber: 14, votes: 14 },
+      { memeNumber: 15, votes: -15 },
+      { memeNumber: 16, votes: -16 },
+      { memeNumber: 17, votes: -17 },
+      { memeNumber: 18, votes: 18 },
+      { memeNumber: 19, votes: 19 },
+      { memeNumber: 20, votes: -20 },
+      { memeNumber: 21, votes: -21 },
+      { memeNumber: 22, votes: 22 },
+      { memeNumber: 23, votes: -23 },
+      { memeNumber: 24, votes: 24 },
+      { memeNumber: 25, votes: -25 },
+      { memeNumber: 26, votes: -26 },
+      { memeNumber: 27, votes: -27 }
     ];
 
     //STATIC LEADERBOARD
     this.leaderboard = [
-    { name: 'ATM', coins: 900 },
-    { name: 'APC', coins: 2200 },
+    { name: 'ATM', coins: 2200 },
+    { name: 'APC', coins: 900 },
     { name: 'YZY', coins: 700 }
     ];
 
@@ -468,21 +468,27 @@ gameScene.createLeaderboard = function() {
 
   this.leaderboardText;
 
-  this.leaderboard.push({
-    name: '*YOU*',
-    coins: this.stats.coins
-  });
+  let check = 0;
 
-  //NOT WORKING supposed to display text from array in grid format
-  //var text2 = game.add.text(32, 120, '');
-  //text2.parseList(this.leaderboard);
-  //Brute forcing it here
-  //Display leaderboard
-
-  console.log("original leaderboard: ");
   console.log(this.leaderboard);
-  let leaderboardForDisplay = sortObjectArray(this.leaderboard);  
-  console.log(leaderboardForDisplay);
+
+
+  //TO DO make for loop
+  //tried to do with for loop but for some reason not working 
+    if(this.leaderboard[0].coins <= this.stats.coins){
+      this.leaderboard.splice(0, 0, { name: '*YOU', coins: this.stats.coins });
+      } else if(this.leaderboard[1].coins <= this.stats.coins){
+      this.leaderboard.splice(1, 0, { name: '*YOU', coins: this.stats.coins });
+      } else if(this.leaderboard[2].coins <= this.stats.coins){
+      this.leaderboard.splice(2, 0, { name: '*YOU', coins: this.stats.coins });
+      } else {
+        this.leaderboard.push({
+          name: '*YOU*', 
+          coins: this.stats.coins
+        })
+      }
+
+        console.log(this.leaderboard);
 
 
   //RANKING
@@ -492,7 +498,7 @@ gameScene.createLeaderboard = function() {
       underline: true
     });
 
-  for(i=0; i < leaderboardForDisplay.length; i++){
+  for(i=0; i < this.leaderboard.length; i++){
     this.leaderboardText = this.add.text(50, 150 + (i * 50), (i + 1) + '.', {
       font: '24px Karla',
       fill: '#ffffff'
@@ -508,8 +514,8 @@ gameScene.createLeaderboard = function() {
       underline: true
     });
 
-  for(i=0; i < leaderboardForDisplay.length; i++){
-    this.leaderboardText = this.add.text(150, 150 + (i * 50), leaderboardForDisplay[i].name, {
+  for(i=0; i < this.leaderboard.length; i++){
+    this.leaderboardText = this.add.text(150, 150 + (i * 50), this.leaderboard[i].name, {
       font: '24px Karla',
       fill: '#ffffff'
     });
@@ -522,8 +528,8 @@ gameScene.createLeaderboard = function() {
       underline: true
     });
 
-  for(i=0; i < leaderboardForDisplay.length; i++){
-    this.leaderboardText = this.add.text(250, 150 + (i * 50), leaderboardForDisplay[i].coins, {
+  for(i=0; i < this.leaderboard.length; i++){
+    this.leaderboardText = this.add.text(250, 150 + (i * 50), this.leaderboard[i].coins, {
       font: '24px Karla',
       fill: '#ffffff'
     });
@@ -538,31 +544,6 @@ gameScene.createLeaderboard = function() {
 
 
 
-
-};
-
-
-//function to sort object array 
-//for sorting scores before creating leaderboard
-var sortObjectArray = function (array) {
-  
-  let sortedLeaderboard = [];
-
-  sortedLeaderboard.push(array[0]);
-
-  console.log("first item in sortedLeaderboard: ")
-  console.log(sortedLeaderboard);
-
-  //console.log(this.leaderboard.length);
-  for(i=1; i < array.length; i++){
-    if(sortedLeaderboard[0].coins <= array[i].coins){
-      sortedLeaderboard.unshift(array[i]);
-    } else {
-      sortedLeaderboard.push(array[i]);
-    }
-  }
-
-    return sortedLeaderboard ;
 
 };
 
