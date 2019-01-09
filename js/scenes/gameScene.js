@@ -86,8 +86,11 @@ gameScene.create = function() {
 
     //event listener for bg
     
+
     this.meme = this.add.sprite(this.sys.game.config.width/2, (this.sys.game.config.height/2) - 50, 'memes', 0).setInteractive();
     this.meme.setFrame(this.memeOrder[this.memeCount]);
+
+
 
     //TO DO ADD SWIPE EFFECT HERE
     //when meme clicked changeMeme

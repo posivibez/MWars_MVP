@@ -69,23 +69,26 @@ loadingScene.preload = function() {
   	this.load.image('sadResult', 'assets/memewars/sadResult.png');
   	this.load.image('leaderboard', 'assets/memewars/TopScores.png');
     this.load.image('leaderboardBtn', 'assets/memewars/leaderboardBtn.png');
-    this.load.image('leaderboardBtn', 'assets/memewars/intro1.png');
-    this.load.image('leaderboardBtn', 'assets/memewars/intro2.png');
+    this.load.image('intro1', 'assets/memewars/intro1.png');
+    this.load.image('intro2', 'assets/memewars/intro2.png');
 
   	
   	//Memes Spritesheet TO DO figure out better way of doing this
   	//load spritesheet
-    this.load.spritesheet('memes', 'assets/memewars/memes.png', {
+    
+    this.load.spritesheet('memes', 'assets/memewars/memesOLDWORK.png', {
         frameWidth: 414,
-        frameHeight: 477,
+        frameHeight: 428,
         margin: 1,
         spacing: 1
     });
+    
+
+
 
 };
 
 loadingScene.create = function() {
-
 
 
 //keep game on then move on
@@ -94,11 +97,11 @@ loadingScene.create = function() {
       repeat: 0, //it will repeat forever
       callback: function(){
 
-      	//TO DO change to move to home scene to add in onboarding
-        this.scene.start('Game');
-
+        this.scene.start('Home');
+        
       },
       callbackScope: this
     });
+    
     
 };
